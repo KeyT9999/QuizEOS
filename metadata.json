@@ -1,0 +1,5 @@
+{
+  "name": "ExamFlow Quizzer",
+  "description": "A quiz and flashcard application allowing users to create custom quizzes and practice them in a simulated exam environment with a split-pane interface.",
+  "requestFramePermissions": []
+}
