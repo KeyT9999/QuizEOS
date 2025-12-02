@@ -12,6 +12,27 @@ export default defineConfig(({ mode }) => {
           '/api': {
             target: 'http://localhost:3001',
             changeOrigin: true,
+            timeout: 5000,
+            configure: (proxy, _options) => {
+              let errorCount = 0;
+              const maxErrors = 3;
+              
+              proxy.on('error', (err, req, res) => {
+                errorCount++;
+                if (errorCount <= maxErrors) {
+                  console.warn(`[Vite Proxy] Backend server không chạy (${errorCount}/${maxErrors}). Vui lòng chạy: npm run dev:server`);
+                }
+                // Tránh spam lỗi - chỉ log một vài lần đầu
+                if (errorCount > maxErrors) {
+                  return; // Không log nữa
+                }
+              });
+              
+              proxy.on('proxyReq', () => {
+                // Reset counter khi có request thành công
+                errorCount = 0;
+              });
+            },
           }
         }
       },
