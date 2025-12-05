@@ -4,6 +4,8 @@ import * as api from './api';
 const STORAGE_KEY = 'examflow_quizzes';
 const ATTEMPTS_KEY = 'examflow_attempts';
 const GEMINI_API_KEY_STORAGE = 'examflow_gemini_api_key';
+// Default Gemini API key (used when user hasn't provided one)
+const DEFAULT_GEMINI_API_KEY = 'AIzaSyCc-9vLFBtmk64g_avygvV-1kaEAHAjRRA';
 const SHARED_QUIZZES_KEY = 'examflow_shared_quizzes'; // Store quiz IDs that were shared
 
 // Seed data to help user see UI immediately
@@ -899,12 +901,12 @@ export const saveAttempt = async (attempt: QuizAttempt): Promise<void> => {
 
 export const getGeminiApiKey = (): string | null => {
   try {
-    // Only check localStorage - bắt buộc user phải nhập API key
+    // Prefer user-saved key, fallback to preset default so users can skip input
     const storedKey = localStorage.getItem(GEMINI_API_KEY_STORAGE);
-    return storedKey;
+    return storedKey || DEFAULT_GEMINI_API_KEY;
   } catch (e) {
     console.error("Failed to get Gemini API key", e);
-    return null;
+    return DEFAULT_GEMINI_API_KEY;
   }
 };
 
